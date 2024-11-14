@@ -1,18 +1,23 @@
-import { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import axios from '../../node_modules/axios/dist/esm/axios';
+import { useProducts } from '../../features/products/useProducts';
+import Loader from '../components/Loader';
 import Product from '../components/Product';
 
 function HomeScreen() {
-  const [products, setProducts] = useState([]);
+  const { products, isPending } = useProducts();
+  // const [products, setProducts] = useState([]);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const { data } = await axios.get(`/api/products`);
-      setProducts(data);
-    };
-    fetchProducts();
-  }, []);
+  // useEffect(() => {
+  //   const fetchProducts = async () => {
+  //     const { data } = await axios.get(`/api/products`);
+  //     setProducts(data);
+  //   };
+  //   fetchProducts();
+  // }, []);
+
+  if (isPending) {
+    return <Loader />;
+  }
 
   return (
     <>

@@ -1,20 +1,25 @@
-import { useEffect, useState } from 'react';
 import { Button, Card, Col, Image, ListGroup, Row } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
-import axios from '../../node_modules/axios/dist/esm/axios';
+import { useProduct } from '../../features/products/useProduct';
+import Loader from '../components/Loader';
 import Rating from '../components/Rating';
 
 function ProductScreen() {
   const { id: productId } = useParams();
-  const [product, setProduct] = useState({});
+  const { product, isPending } = useProduct(productId);
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const { data } = await axios.get(`/api/products/${productId}`);
-      setProduct(data);
-    };
-    fetchProduct();
-  }, [productId]);
+  if (isPending) {
+    return <Loader />;
+  }
+  // const [product, setProduct] = useState({});
+
+  // useEffect(() => {
+  //   const fetchProduct = async () => {
+  //     const { data } = await axios.get(`/api/products/${productId}`);
+  //     setProduct(data);
+  //   };
+  //   fetchProduct();
+  // }, [productId]);
 
   if (!product) {
     return <div>Product Not Found</div>;
