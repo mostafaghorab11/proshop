@@ -1,11 +1,16 @@
 // import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-import products from './data/products.js';
+import connectDB from './config/db.js';
+import globalErrorsHandler from './controllers/errorController.js';
+import productsRouter from './routes/products.js';
+import AppError from './utils/appError.js';
 dotenv.config();
 
 const port = process.env.PORT;
 const app = express();
+
+connectDB();
 
 // const corsOptions = {
 //   origin: 'http://localhost:5173',
@@ -19,14 +24,13 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.get('/api/products', (req, res) => {
-  res.json(products);
+app.use('/api/products', productsRouter);
+
+app.all('*', (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`));
 });
 
-app.get('/api/products/:id', (req, res) => {
-  const product = products.find((p) => p._id === req.params.id);
-  res.json(product);
-});
+app.use(globalErrorsHandler);
 
 app.listen(port, () => {
   console.log(`app is listening on port ${port} ...`);
