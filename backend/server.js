@@ -1,14 +1,21 @@
 // import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import express from 'express';
 import connectDB from './config/db.js';
 import globalErrorsHandler from './controllers/errorController.js';
 import productsRouter from './routes/products.js';
+import usersRouter from './routes/userRoutes.js';
 import AppError from './utils/appError.js';
 dotenv.config();
 
 const port = process.env.PORT;
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// cookie parser middleware
+app.use(cookieParser());
 
 connectDB();
 
@@ -20,11 +27,8 @@ connectDB();
 
 // app.use(cors(corsOptions));
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
 app.use('/api/products', productsRouter);
+app.use('/api/users', usersRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
