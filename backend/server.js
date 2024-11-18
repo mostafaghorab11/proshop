@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 app.use('/api/products', productsRouter);
 
 app.all('*', (req, res, next) => {
-  next(new AppError(`Can't find ${req.originalUrl} on this server!`));
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
 app.use(globalErrorsHandler);

@@ -1,5 +1,4 @@
-// import axios from '../../node_modules/axios/dist/esm/axios';
-import axios from '../node_modules/axios/dist/esm/axios';
+import axios from '../../node_modules/axios/dist/esm/axios';
 
 export const fetchProducts = async () => {
   const { data } = await axios.get(`/api/products`);

@@ -4,6 +4,8 @@ import { Container } from 'react-bootstrap';
 import { Outlet } from 'react-router-dom';
 import Footer from './components/Footer';
 import Header from './components/Header';
+import { CartProvider } from './contexts/CartContext';
+import { Toaster } from 'react-hot-toast';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,13 +20,16 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
-      <Header />
-      <main className="py-3">
-        <Container>
-          <Outlet />
-        </Container>
-      </main>
-      <Footer />
+      <CartProvider>
+        <Toaster position='top-center' />
+        <Header />
+        <main className="py-3">
+          <Container>
+            <Outlet />
+          </Container>
+        </main>
+        <Footer />
+      </CartProvider>
     </QueryClientProvider>
   );
 }

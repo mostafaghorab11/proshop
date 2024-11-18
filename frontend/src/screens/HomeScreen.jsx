@@ -1,21 +1,14 @@
 import { Col, Row } from 'react-bootstrap';
-import { useProducts } from '../../features/products/useProducts';
 import Loader from '../components/Loader';
 import Product from '../components/Product';
+// import { useCart } from '../features/cart/useCart';
+import { useProducts } from '../features/products/useProducts';
 
 function HomeScreen() {
-  const { products, isPending } = useProducts();
-  // const [products, setProducts] = useState([]);
+  const { products, isPending: productsIsPending } = useProducts();
+  // const { cart, isPending: cartIsPending } = useCart();
 
-  // useEffect(() => {
-  //   const fetchProducts = async () => {
-  //     const { data } = await axios.get(`/api/products`);
-  //     setProducts(data);
-  //   };
-  //   fetchProducts();
-  // }, []);
-
-  if (isPending) {
+  if (productsIsPending) {
     return <Loader />;
   }
 
