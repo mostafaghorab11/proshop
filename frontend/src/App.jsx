@@ -1,11 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Container } from 'react-bootstrap';
+import { Toaster } from 'react-hot-toast';
 import { Outlet } from 'react-router-dom';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import { CartProvider } from './contexts/CartContext';
-import { Toaster } from 'react-hot-toast';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,7 +21,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
       <CartProvider>
-        <Toaster position='top-center' />
+        <Toaster position="top-center" />
         <Header />
         <main className="py-3">
           <Container>

@@ -15,13 +15,13 @@ const registerUser = catchAsync(async (req, res, next) => {
   if (existingUser) {
     return next(new AppError('User already exists', 400));
   }
-  const user = await User.create({ name, email, password }).select('-password');
+  const user = await User.create({ name, email, password });
   if (!user) {
     return next(new AppError('User could not be created', 400));
   }
 
-  const token = generateToken(user._id, res);
-  res.status(201).json({ user, token });
+  generateToken(user._id, res);
+  res.status(201).json({ user });
 });
 
 // @desc Login user
@@ -40,9 +40,9 @@ const login = catchAsync(async (req, res, next) => {
     }
   }
 
-  const token = generateToken(user._id, res);
+  generateToken(user._id, res);
 
-  res.status(200).json({ user, token });
+  res.status(200).json({ user });
 });
 
 // @desc Logout user
