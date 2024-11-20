@@ -1,7 +1,8 @@
 import axios from '../../node_modules/axios/dist/esm/axios';
 
 export const fetchProducts = async () => {
-  const { data } = await axios.get(`/api/products`);
+  const { data, error } = await axios.get(`/api/products`);
+  if (error) throw new Error(error.message);
   return data;
 };
 

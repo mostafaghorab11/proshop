@@ -112,7 +112,6 @@ export const CartProvider = ({ children }) => {
 
       case 'CLEAR_CART': {
         setState(initialState);
-        toast.success('Cart cleared');
         return;
       }
 
