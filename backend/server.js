@@ -4,8 +4,9 @@ import dotenv from 'dotenv';
 import express from 'express';
 import connectDB from './config/db.js';
 import globalErrorsHandler from './controllers/errorController.js';
+import ordersRouter from './routes/orders.js';
 import productsRouter from './routes/products.js';
-import usersRouter from './routes/userRoutes.js';
+import usersRouter from './routes/users.js';
 import AppError from './utils/appError.js';
 dotenv.config();
 
@@ -29,6 +30,7 @@ connectDB();
 
 app.use('/api/products', productsRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/orders', ordersRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
