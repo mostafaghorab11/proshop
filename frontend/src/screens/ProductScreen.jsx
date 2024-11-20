@@ -15,7 +15,6 @@ import { useCart } from '../contexts/CartContext';
 import { useProduct } from '../features/products/useProduct';
 
 function ProductScreen() {
-  const navigate = useNavigate();
   const { id: productId } = useParams();
   const { product, isPending } = useProduct(productId);
   const { dispatch } = useCart();
@@ -24,7 +23,6 @@ function ProductScreen() {
   const [qty, setQty] = useState(1);
 
   const addToCartHandler = () => {
-    navigate('/cart');
     // update the cart context
     dispatch({ type: 'ADD_TO_CART', payload: { ...product, quantity: qty } });
   };

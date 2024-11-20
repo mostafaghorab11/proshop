@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
 import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import { useLocalStorageState } from '../hooks/useLocalStorageState';
 import { calculatePricing } from '../utils/cartUtils';
 
@@ -13,9 +14,17 @@ const initialState = {
     tax: 0,
     total: 0,
   },
+  shippingAddress: {
+    address: '',
+    city: '',
+    postalCode: '',
+    country: '',
+  },
+  paymentMethod: 'PayPal',
 };
 
 export const CartProvider = ({ children }) => {
+  const navigate = useNavigate();
   const [state, setState] = useLocalStorageState(initialState, 'shopping-cart');
 
   const dispatch = (action) => {
@@ -35,6 +44,7 @@ export const CartProvider = ({ children }) => {
             id: `add-to-cart-${action.payload._id}`,
           });
           setState({
+            ...state,
             items: updatedItems,
             pricing: calculatePricing(updatedItems),
           });
@@ -49,6 +59,7 @@ export const CartProvider = ({ children }) => {
           id: `add-to-cart-${action.payload._id}`,
         });
         setState({
+          ...state,
           items: updatedItems,
           pricing: calculatePricing(updatedItems),
         });
@@ -63,6 +74,7 @@ export const CartProvider = ({ children }) => {
           id: `remove-from-cart-${action.payload.id}`,
         });
         setState({
+          ...state,
           items: updatedItems,
           pricing: calculatePricing(updatedItems),
         });
@@ -76,6 +88,7 @@ export const CartProvider = ({ children }) => {
             (item) => item._id !== action.payload._id
           );
           setState({
+            ...state,
             items: updatedItems,
             pricing: calculatePricing(updatedItems),
           });
@@ -89,6 +102,7 @@ export const CartProvider = ({ children }) => {
         );
 
         setState({
+          ...state,
           items: updatedItems,
           pricing: calculatePricing(updatedItems),
         });
@@ -99,6 +113,27 @@ export const CartProvider = ({ children }) => {
       case 'CLEAR_CART': {
         setState(initialState);
         toast.success('Cart cleared');
+        return;
+      }
+
+      case 'SET_SHIPPING_ADDRESS': {
+        setState({
+          ...state,
+          shippingAddress: action.payload,
+        });
+        return;
+      }
+
+      case 'SET_PAYMENT_METHOD': {
+        if (!state.shippingAddress.address) {
+          toast.error('Shipping address is required');
+          navigate('/shipping');
+          return;
+        }
+        setState({
+          ...state,
+          paymentMethod: action.payload,
+        });
         return;
       }
     }
