@@ -1,5 +1,5 @@
 import axios from '../../node_modules/axios/dist/esm/axios';
-import { ORDERS_URL } from '../constants';
+import { ORDERS_URL, PAYPAL_URL } from '../constants';
 
 export const getAllOrders = async () => {
   const { data, error } = await axios.get(ORDERS_URL);
@@ -19,14 +19,23 @@ export const createOrder = async (order) => {
   return data;
 };
 
-export const getOrder = async (orderId) => {
+export const getOrderById = async (orderId) => {
   const { data, error } = await axios.get(`${ORDERS_URL}/${orderId}`);
   if (error) throw new Error(error.message);
   return data;
 };
 
-export const updateOrderAsPaid = async (orderId) => {
-  const { data, error } = await axios.put(`${ORDERS_URL}/${orderId}/pay`);
+export const updateOrderAsPaid = async ({ orderId, details }) => {
+  const { data, error } = await axios.put(
+    `${ORDERS_URL}/${orderId}/pay`,
+    details
+  );
+  if (error) throw new Error(error.message);
+  return data;
+};
+
+export const getPayPalClientId = async () => {
+  const { data, error } = await axios.get(`${PAYPAL_URL}`);
   if (error) throw new Error(error.message);
   return data;
 };

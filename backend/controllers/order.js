@@ -65,8 +65,8 @@ const getOrderById = async (req, res, next) => {
 // @route PUT /api/orders/:id/pay
 // @access Private
 const updateOrderToPaid = async (req, res, next) => {
+  const { id, status, update_time, payer: { email_address } } = req.body;
   const order = await Order.findById(req.params.id);
-  const { id, status, update_time, email_address } = req.body;
   if (order) {
     order.isPaid = true;
     order.paidAt = Date.now();
