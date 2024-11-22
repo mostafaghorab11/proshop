@@ -11,9 +11,10 @@ export default function useOrder() {
     queryKey: ['order'],
     queryFn: () => getOrderById(orderId),
     // keep unused data for 5 seconds
-    // staleTime: 5 * 1000,
-    onSuccess: (order) => {
-      queryClient.setQueryData(['order', order._id], order);
+    staleTime: 0,
+    onSuccess: () => {
+      // invalidate the cache for the order
+      queryClient.invalidateQueries(['order']);
     },
     onError: (error) => {
       toast.error(error.message);

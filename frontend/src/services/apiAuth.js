@@ -29,4 +29,14 @@ const getCurrentUser = async () => {
   return data.user;
 };
 
-export { getCurrentUser, login, logout, register };
+const updateProfile = async ({ name, email, password }) => {
+  const { data, error } = await axios.put(`${USERS_URL}/profile`, {
+    name,
+    email,
+    password,
+  });
+  if (error) throw new Error(error.message);
+  return data;
+};
+
+export { getCurrentUser, login, logout, register, updateProfile };

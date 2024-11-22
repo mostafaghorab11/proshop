@@ -39,7 +39,7 @@ const addOrderItems = async (req, res, next) => {
 };
 
 // @desc Get my orders
-// @route GET /api/orders
+// @route GET /api/orders/myorders
 // @access Private
 const getOrders = async (req, res) => {
   const orders = await Order.find({ user: req.user._id });

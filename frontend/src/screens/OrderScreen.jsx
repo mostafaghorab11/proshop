@@ -47,6 +47,8 @@ function OrderScreen() {
     [clientId, paypalDispatch, order, order?.isPaid]
   );
 
+  if (isPending) return <Loader />;
+
   const createOrder = (data, actions) => {
     return actions.order
       .create({
@@ -74,7 +76,6 @@ function OrderScreen() {
     console.log(actions);
   };
 
-  if (isPending) return <Loader />;
   if (!order) return <div>Order Not Found</div>;
 
   return (
