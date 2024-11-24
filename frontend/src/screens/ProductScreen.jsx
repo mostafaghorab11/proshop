@@ -18,7 +18,6 @@ function ProductScreen() {
   const { id: productId } = useParams();
   const { product, isPending } = useProduct(productId);
   const { dispatch } = useCart();
-  // console.log(state);
 
   const [qty, setQty] = useState(1);
 

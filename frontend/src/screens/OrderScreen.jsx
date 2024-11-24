@@ -1,25 +1,25 @@
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
-import { Card, Col, Image, ListGroup, Row } from 'react-bootstrap';
+import { Button, Card, Col, Image, ListGroup, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { useEffect } from 'react';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import { useUser } from '../features/auth/useUser';
+import useDeliverOrder from '../features/orders/useDeliverOrder';
 import useOrder from '../features/orders/useOrder';
 import usePayOrder from '../features/orders/usePayOrder';
 import usePayPalClientId from '../features/orders/usePayPalClientId';
 
 function OrderScreen() {
-  const { order, isPending } = useOrder();
-
   // eslint-disable-next-line no-unused-vars
   const [_, paypalDispatch] = usePayPalScriptReducer();
 
-  // const { paidOrder, isPending: payPending } = usePayOrder();
-
-  const { clientId } = usePayPalClientId();
-
+  const { clientId, isPending: clientIdPending } = usePayPalClientId();
+  const { order, isPending: orderPending } = useOrder();
   const { payOrder, isPending: payPending } = usePayOrder();
+  const { deliverOrder, isPending: deliverPending } = useDeliverOrder();
+  const { user, isPending: userPending } = useUser();
 
   useEffect(
     function () {
@@ -47,7 +47,14 @@ function OrderScreen() {
     [clientId, paypalDispatch, order, order?.isPaid]
   );
 
-  if (isPending) return <Loader />;
+  if (
+    clientIdPending ||
+    orderPending ||
+    payPending ||
+    deliverPending ||
+    userPending
+  )
+    return <Loader />;
 
   const createOrder = (data, actions) => {
     return actions.order
@@ -183,6 +190,22 @@ function OrderScreen() {
                         onError={onErrorPayment}
                       />
                     </div>
+                  )}
+                </ListGroup.Item>
+              )}
+
+              {user.isAdmin && order.isPaid && !order.isDelivered && (
+                <ListGroup.Item>
+                  {deliverPending ? (
+                    <Loader />
+                  ) : (
+                    <Button
+                      type="button"
+                      className="btn btn-block"
+                      onClick={deliverOrder}
+                    >
+                      Mark As Delivered
+                    </Button>
                   )}
                 </ListGroup.Item>
               )}

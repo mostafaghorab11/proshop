@@ -1,14 +1,14 @@
 import axios from '../../node_modules/axios/dist/esm/axios';
 import { ORDERS_URL, PAYPAL_URL } from '../constants';
 
-export const getAllOrders = async () => {
-  const { data, error } = await axios.get(ORDERS_URL);
+export const getMyOrders = async () => {
+  const { data, error } = await axios.get(`${ORDERS_URL}/myorders`);
   if (error) throw new Error(error.message);
   return data;
 };
 
-export const getMyOrders = async () => {
-  const { data, error } = await axios.get(`${ORDERS_URL}/myorders`);
+export const getAllOrdersAdmin = async () => {
+  const { data, error } = await axios.get(`${ORDERS_URL}`);
   if (error) throw new Error(error.message);
   return data;
 };
@@ -29,6 +29,14 @@ export const updateOrderAsPaid = async ({ orderId, details }) => {
   const { data, error } = await axios.put(
     `${ORDERS_URL}/${orderId}/pay`,
     details
+  );
+  if (error) throw new Error(error.message);
+  return data;
+};
+
+export const updateOrderAsDelivered = async (orderId) => {
+  const { data, error } = await axios.put(
+    `${ORDERS_URL}/${orderId}/deliver`
   );
   if (error) throw new Error(error.message);
   return data;

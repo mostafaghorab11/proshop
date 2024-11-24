@@ -2,12 +2,12 @@ import { Navigate, Outlet } from 'react-router-dom';
 import Loader from '../components/Loader';
 import { useUser } from '../features/auth/useUser';
 
-function PrivateRoute() {
+function AdminRoute() {
   const { user, isPending } = useUser();
   if (isPending) {
     return <Loader />;
   }
-  return user ? <Outlet /> : <Navigate to="/login" replace />;
+  return user && user.isAdmin ? <Outlet /> : <Navigate to="/login" replace />;
 }
 
-export default PrivateRoute;
+export default AdminRoute;

@@ -1,10 +1,11 @@
 import Order from '../models/order.js';
 import AppError from '../utils/appError.js';
+import catchAsync from '../utils/catchAsync.js';
 
 // @desc add new order
 // @route POST /api/orders
 // @access Private
-const addOrderItems = async (req, res, next) => {
+const addOrderItems = catchAsync(async (req, res, next) => {
   const {
     orderItems,
     shippingAddress,
@@ -36,20 +37,20 @@ const addOrderItems = async (req, res, next) => {
     const createdOrder = await order.save();
     res.status(201).json(createdOrder);
   }
-};
+});
 
 // @desc Get my orders
 // @route GET /api/orders/myorders
 // @access Private
-const getOrders = async (req, res) => {
+const getOrders = catchAsync(async (req, res) => {
   const orders = await Order.find({ user: req.user._id });
   res.status(200).json(orders);
-};
+});
 
 // @desc get order by id
 // @route GET /api/orders/:id
 // @access Private
-const getOrderById = async (req, res, next) => {
+const getOrderById = catchAsync(async (req, res, next) => {
   const order = await Order.findById(req.params.id).populate(
     'user',
     'name email'
@@ -59,13 +60,18 @@ const getOrderById = async (req, res, next) => {
   } else {
     next(new AppError('Order not found', 404));
   }
-};
+});
 
 // @desc update order to paid
 // @route PUT /api/orders/:id/pay
 // @access Private
-const updateOrderToPaid = async (req, res, next) => {
-  const { id, status, update_time, payer: { email_address } } = req.body;
+const updateOrderToPaid = catchAsync(async (req, res, next) => {
+  const {
+    id,
+    status,
+    update_time,
+    payer: { email_address },
+  } = req.body;
   const order = await Order.findById(req.params.id);
   if (order) {
     order.isPaid = true;
@@ -81,12 +87,12 @@ const updateOrderToPaid = async (req, res, next) => {
   } else {
     next(new AppError('Order not found', 404));
   }
-};
+});
 
 // @desc update order to delivered
 // @route PUT /api/orders/:id/deliver
 // @access Private/Admin
-const updateOrderToDelivered = async (req, res, next) => {
+const updateOrderToDelivered = catchAsync(async (req, res, next) => {
   const order = await Order.findById(req.params.id);
   if (order) {
     order.isDelivered = true;
@@ -96,15 +102,15 @@ const updateOrderToDelivered = async (req, res, next) => {
   } else {
     next(new AppError('Order not found', 404));
   }
-};
+});
 
 //@desc Get all orders
 //@route GET /api/orders
 //@access Private/Admin
-const getAllOrders = async (req, res) => {
+const getAllOrders = catchAsync(async (req, res) => {
   const orders = await Order.find({}).populate('user', 'id name');
   res.status(200).json(orders);
-};
+});
 
 export {
   addOrderItems,
