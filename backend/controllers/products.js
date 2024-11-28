@@ -6,7 +6,7 @@ import catchAsync from '../utils/catchAsync.js';
 // @route GET /api/products
 // @access Public
 export const getAllProducts = catchAsync(async (req, res) => {
-  const limit = req.query.limit;
+  const limit = process.env.PAGINATION_LIMIT || 10;
   const page = Number(req.query.page) || 1;
 
   const keyword = req.query.keyword
