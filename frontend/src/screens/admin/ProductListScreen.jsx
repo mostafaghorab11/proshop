@@ -2,14 +2,18 @@ import { Button, Col, Row, Table } from 'react-bootstrap';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap';
 import Loader from '../../components/Loader';
+import Paginate from '../../components/Paginate';
 import useCreateProduct from '../../features/products/useCreateProduct';
 import useDeleteProduct from '../../features/products/useDeleteProduct';
 import { useProducts } from '../../features/products/useProducts';
 
 function ProductListScreen() {
-  const { products, isPending } = useProducts();
+  const { data, isPending } = useProducts();
   const { deleteProduct } = useDeleteProduct();
   const { createProduct } = useCreateProduct();
+
+  if (isPending) return <Loader />;
+  const { products, page, pages } = data;
 
   // handle delete product
   const handleDeleteProduct = (id) => {
@@ -84,6 +88,7 @@ function ProductListScreen() {
           ))}
         </tbody>
       </Table>
+      <Paginate pages={pages} page={page} isAdmin />
     </>
   );
 }

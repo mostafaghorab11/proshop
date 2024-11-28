@@ -1,8 +1,10 @@
 import axios from '../../node_modules/axios/dist/esm/axios';
 import { PRODUCTS_URL, UPLOAD_URL } from '../constants';
 
-export const fetchProducts = async () => {
-  const { data, error } = await axios.get(PRODUCTS_URL);
+export const fetchProducts = async (page, limit, keyword) => {
+  const { data, error } = await axios.get(`${PRODUCTS_URL}`, {
+    params: { page, limit, keyword },
+  });
   if (error) throw new Error(error.message);
   return data;
 };
@@ -13,13 +15,6 @@ export const fetchProduct = async (productId) => {
 
   return data;
 };
-
-// create new product api
-// export const createProductApi = async (product) => {
-//   const { data, error } = await axios.post(`${PRODUCTS_URL}`, product);
-//   if (error) throw new Error(error.message);
-//   return data;
-// };
 
 export const createProductApi = async () => {
   const { data, error } = await axios.post(`${PRODUCTS_URL}`);
@@ -50,5 +45,22 @@ export const uploadImageApi = async (image) => {
   if (error) throw new Error(error.message);
 
   // should return the image path
+  return data;
+};
+
+// create review api
+export const createReviewApi = async (productId, review) => {
+  const { data, error } = await axios.post(
+    `${PRODUCTS_URL}/${productId}/reviews`,
+    review
+  );
+  if (error) throw new Error(error.message);
+  return data;
+};
+
+// get top products api
+export const getTopProductsApi = async () => {
+  const { data, error } = await axios.get(`${PRODUCTS_URL}/top`);
+  if (error) throw new Error(error.message);
   return data;
 };

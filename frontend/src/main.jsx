@@ -2,6 +2,7 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { lazy, StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { HelmetProvider } from 'react-helmet-async';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -66,8 +67,10 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <PayPalScriptProvider>
-      <RouterProvider router={router} />
-    </PayPalScriptProvider>
+    <HelmetProvider>
+      <PayPalScriptProvider>
+        <RouterProvider router={router} />
+      </PayPalScriptProvider>
+    </HelmetProvider>
   </StrictMode>
 );

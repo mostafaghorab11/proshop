@@ -6,8 +6,25 @@ import catchAsync from '../utils/catchAsync.js';
 // @route GET /api/products
 // @access Public
 export const getAllProducts = catchAsync(async (req, res) => {
-  const products = await Product.find({});
-  res.status(200).json(products);
+  const limit = req.query.limit;
+  const page = Number(req.query.page) || 1;
+
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: 'i',
+        },
+      }
+    : {};
+
+  const count = await Product.countDocuments({ ...keyword });
+
+  const products = await Product.find({ ...keyword })
+    .limit(limit)
+    .skip(limit * page - limit);
+
+  res.status(200).json({ products, page, pages: Math.ceil(count / limit) });
 });
 
 // @desc Get product by id
@@ -72,4 +89,49 @@ export const deleteProduct = catchAsync(async (req, res, next) => {
   }
   await product.deleteOne();
   res.status(200).json({ message: 'Product deleted' });
+});
+
+// @desc Post make a review
+// @route POST /api/products/:id/reviews
+// @access Private
+export const createProductReview = catchAsync(async (req, res, next) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    return next(new AppError('Product not found', 404));
+  }
+
+  const { rating, comment } = req.body;
+
+  const alreadyReviewed = product.reviews.find(
+    (r) => r.user.toString() === req.user._id.toString()
+  );
+
+  if (alreadyReviewed) {
+    return next(new AppError('Product already reviewed', 400));
+  }
+
+  const review = {
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+    user: req.user._id,
+  };
+
+  product.reviews.push(review);
+  product.numReviews = product.reviews.length;
+  product.rating =
+    product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+    product.reviews.length;
+
+  await product.save();
+
+  res.status(201).json({ message: 'Review added' });
+});
+
+// @desc Get top rated products
+// @route GET /api/products/top
+// @access Public
+export const getTopProducts = catchAsync(async (req, res) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+  res.status(200).json(products);
 });

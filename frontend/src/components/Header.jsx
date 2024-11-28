@@ -4,6 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { useCart } from '../contexts/CartContext';
 import useLogout from '../features/auth/useLogout';
 import { useUser } from '../features/auth/useUser';
+import SearchBox from './SearchBox';
 
 function Header() {
   const { cart } = useCart();
@@ -19,6 +20,9 @@ function Header() {
               <img src="/logo.png" alt="ProShop" /> ProShop
             </Navbar.Brand>
           </LinkContainer>
+          <div className="mx-5">
+            <SearchBox />
+          </div>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
