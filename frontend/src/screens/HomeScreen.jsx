@@ -44,7 +44,7 @@ function HomeScreen() {
           <Paginate
             pages={pages}
             page={page}
-            isAdmin={user.isAdmin}
+            isAdmin={user?.isAdmin}
             search={search}
           />
         </>

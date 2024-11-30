@@ -4,9 +4,8 @@ import { useUser } from '../features/auth/useUser';
 
 function AdminRoute() {
   const { user, isPending } = useUser();
-  if (isPending) {
-    return <Loader />;
-  }
+  if (isPending) return <Loader />;
+
   return user && user.isAdmin ? <Outlet /> : <Navigate to="/login" replace />;
 }
 
